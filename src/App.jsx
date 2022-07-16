@@ -9,7 +9,9 @@ import EditCategory from "./Pages/Category/EditCategory";
 import ProductList from "./Pages/Product/ProductList";
 import AddProduct from "./Pages/Product/AddProduct";
 import EditProduct from "./Pages/Product/EditProduct";
-
+import UserList from "./Pages/User/UserList";
+import AdminList from "./Pages/Admin/AdminList";
+import Dashboard from "./Pages/Dashboard";
 function App() {
   return (
     <div className="d-flex" id="wrapper">
@@ -23,7 +25,10 @@ function App() {
           {/* <EditCategory/> */}
           {/* <ProductList /> */}
           {/* <AddProduct/> */}
-          <EditProduct/>
+          {/* <EditProduct/> */}
+          {/* <UserList/> */}
+          {/* <AdminList /> */}
+          <Dashboard/>
         </MDBContainer>
       </div>
     </div>

@@ -3,6 +3,10 @@ import { useState } from "react";
 const Sidebar = () => {
   const [commonRoutes, setCommonRoutes] = useState([
     {
+      name: "dashboard",
+      link: "",
+    },
+    {
       name: "categories",
       link: "",
     },
@@ -32,7 +36,7 @@ const Sidebar = () => {
         {commonRoutes.map((i) => {
           return (
             <a
-              class="list-group-item list-group-item-action list-group-item-light p-3"
+              class="list-group-item list-group-item-action list-group-item-light p-3 text-capitalize"
               href="#!"
             >
               {i.name}
