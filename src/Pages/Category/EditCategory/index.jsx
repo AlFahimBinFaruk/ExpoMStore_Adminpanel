@@ -15,7 +15,10 @@ const EditCategory = () => {
           <div className="category-title">
             {/* prev title */}
             <div className="mb-2">
-              <h6>Prev Category Title : <span className="text-dark">Test tiele</span></h6>
+              <h6>
+                Prev Category Title :{" "}
+                <span className="text-dark">Test tiele</span>
+              </h6>
             </div>
             {/* new title */}
             <div className="mb-2">
@@ -28,15 +31,19 @@ const EditCategory = () => {
             </div>
           </div>
           {/* category thmb */}
-          {/* <div className="mb-2">
+          <div className="category-thumb">
+            {/* prev */}
+            <PrevCategoryThumbnail />
+            {/* new thumb */}
+            {/* <div className="mb-2">
             <small className="fw-bold">Select A Category Thumbnail:</small>
             <MDBInput type="file" size="sm" />
           </div> */}
-          <PrevCategoryThumbnail/>
+          </div>
 
           {/* handle submit btn */}
           <MDBBtn block size="sm" className="mt-3">
-            Submit
+            Update
           </MDBBtn>
         </div>
       </MDBCol>

@@ -6,6 +6,9 @@ import { MDBContainer } from "mdb-react-ui-kit";
 import CategoryList from "./Pages/Category/CategoryList";
 import AddCategory from "./Pages/Category/AddCategory";
 import EditCategory from "./Pages/Category/EditCategory";
+import ProductList from "./Pages/Product/ProductList";
+import AddProduct from "./Pages/Product/AddProduct";
+import EditProduct from "./Pages/Product/EditProduct";
 
 function App() {
   return (
@@ -17,7 +20,10 @@ function App() {
         <MDBContainer className="my-5">
           {/* <CategoryList /> */}
           {/* <AddCategory/> */}
-          <EditCategory/>
+          {/* <EditCategory/> */}
+          {/* <ProductList /> */}
+          {/* <AddProduct/> */}
+          <EditProduct/>
         </MDBContainer>
       </div>
     </div>
