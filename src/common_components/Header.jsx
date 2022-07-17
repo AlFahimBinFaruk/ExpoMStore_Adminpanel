@@ -18,15 +18,9 @@ const Header = () => {
           role="button"
         />
 
-        <form className="d-flex input-group w-auto">
-          <input
-            type="search"
-            className="form-control"
-            placeholder="Type query"
-            aria-label="Search"
-          />
-          <MDBBtn color="primary">Search</MDBBtn>
-        </form>
+        <a href="/" className="fw-bold text-dark">
+          My Account
+        </a>
       </MDBContainer>
     </MDBNavbar>
   );

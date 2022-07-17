@@ -1,46 +1,46 @@
 import { useState } from "react";
-
+import {Link} from "react-router-dom"
 const Sidebar = () => {
   const [commonRoutes, setCommonRoutes] = useState([
     {
       name: "dashboard",
-      link: "",
+      link: "/",
     },
     {
       name: "categories",
-      link: "",
+      link: "/category-list",
     },
     {
       name: "products",
-      link: "",
+      link: "/product-list",
     },
     {
       name: "users",
-      link: "",
+      link: "/user-list",
     },
     {
       name: "orders",
-      link: "",
+      link: "/order-list",
     },
     {
       name: "Admins",
-      link: "",
+      link: "/admin-list",
     },
   ]);
   return (
-    <div class="border-end bg-white" id="sidebar-wrapper">
-      <div class="sidebar-heading border-bottom bg-light">
-        <h3 className="text-muted fst-italic">ExpoMStore</h3>
+    <div className="border-end bg-white" id="sidebar-wrapper">
+      <div className="sidebar-heading border-bottom bg-light">
+        <h3 classNameName="text-muted fst-italic">ExpoMStore</h3>
       </div>
-      <div class="list-group list-group-flush">
+      <div className="list-group list-group-flush">
         {commonRoutes.map((i) => {
           return (
-            <a
-              class="list-group-item list-group-item-action list-group-item-light p-3 text-capitalize"
-              href="#!"
+            <Link
+              className="list-group-item list-group-item-action list-group-item-light p-3 text-capitalize"
+              to={i.link}
             >
               {i.name}
-            </a>
+            </Link>
           );
         })}
       </div>
