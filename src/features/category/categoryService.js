@@ -70,7 +70,7 @@ const deleteCategory = async (id, token) => {
 };
 
 //export all these functions
-const userService = {
+const categoryService = {
   addCategory,
   getAllCategoryList,
   deleteCategory,
@@ -78,4 +78,4 @@ const userService = {
   manageCategoryStatus,
 };
 
-export default userService;
+export default categoryService;

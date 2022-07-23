@@ -75,7 +75,7 @@ const deleteProduct = async (id, token) => {
 };
 
 //export all these functions
-const userService = {
+const productService = {
   addProduct,
   getAllProductList,
   getProductDetails,
@@ -84,4 +84,4 @@ const userService = {
   manageProductStatus,
 };
 
-export default userService;
+export default productService;
