@@ -28,7 +28,17 @@ const getAllCategoryList = async (pageNo, token) => {
 
   return response.data;
 };
+//getCategoryDetails
+const getCategoryDetails = async (id, token) => {
+  const config = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(`${API_URL}/details/${id}`, config);
 
+  return response.data;
+};
 //editCategory
 const editCategory = async (id, data, token) => {
   const config = {
@@ -73,6 +83,7 @@ const deleteCategory = async (id, token) => {
 const categoryService = {
   addCategory,
   getAllCategoryList,
+  getCategoryDetails,
   deleteCategory,
   editCategory,
   manageCategoryStatus,

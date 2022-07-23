@@ -1,7 +1,40 @@
 import { MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
-import Pagination from "../../../common_components/Pagination"
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import LoadingSpinner from "../../../common_components/LoadingSpinner";
+import {
+  getAllCategoryList,
+  reset,
+} from "../../../features/category/categorySlice";
+import Pagination from "../../../common_components/Pagination";
 import SingleCategoryTableItem from "./components/SingleCategoryTableItem";
+import ServerErrorPage from "../../Error/ServerErrorPage";
+
 const CategoryList = () => {
+  const dispatch = useDispatch();
+  const [pageNo, setPageNo] = useState(1);
+  //get initial state from admin store
+  const { categoryList, isCategoryLoading, isCategoryError } = useSelector(
+    (state) => state.category
+  );
+  //by default one time ,and then everytime pageNo changes call it..
+  useEffect(() => {
+    dispatch(getAllCategoryList(pageNo));
+
+    return () => {
+      reset();
+    };
+  }, [dispatch, pageNo]);
+
+  //if there are error
+  if (isCategoryError) {
+    return <ServerErrorPage />;
+  }
+
+  //if the page is loading
+  if (isCategoryLoading) {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="category-list">
       {/* top */}
@@ -22,11 +55,20 @@ const CategoryList = () => {
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-          <SingleCategoryTableItem />
+          {categoryList &&
+            categoryList.categoryList.map((i, index) => {
+              return (
+                <SingleCategoryTableItem count={index + 1} {...i} key={index} />
+              );
+            })}
         </MDBTableBody>
       </MDBTable>
       {/* pagination */}
-      <Pagination />
+      <Pagination
+        pageNo={pageNo}
+        setPageNo={setPageNo}
+        totalPageCount={categoryList?.totalPageCount}
+      />
     </div>
   );
 };

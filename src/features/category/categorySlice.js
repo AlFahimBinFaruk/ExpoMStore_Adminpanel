@@ -4,6 +4,7 @@ import categoryService from "./categoryService";
 //initial state
 const initialState = {
   categoryList: null,
+  categoryDetails: null,
   isCategoryError: false,
   isCategorySuccess: false,
   isCategoryLoading: false,
@@ -40,11 +41,35 @@ export const addCategory = createAsyncThunk(
  */
 export const getAllCategoryList = createAsyncThunk(
   "category/getAllCategoryList",
-  async ({pageNo}, thunkAPI) => {
+  async (pageNo, thunkAPI) => {
     try {
       //get the admin token ..
       const token = thunkAPI.getState().admin.adminInfo.token;
-      return await categoryService.getAllCategoryList(pageNo,token);
+      return await categoryService.getAllCategoryList(pageNo, token);
+    } catch (error) {
+      const categoryMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.categoryMessage) ||
+        error.categoryMessage ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(categoryMessage);
+    }
+  }
+);
+
+/**
+ * get category details
+ * only admin or super admin can access this
+ */
+export const getCategoryDetails = createAsyncThunk(
+  "category/getCategoryDetails",
+  async (id, thunkAPI) => {
+    try {
+      //get the admin token ..
+      const token = thunkAPI.getState().admin.adminInfo.token;
+      return await categoryService.getCategoryDetails(id, token);
     } catch (error) {
       const categoryMessage =
         (error.response &&
@@ -165,6 +190,19 @@ export const categorySlice = createSlice({
         state.categoryList = action.payload;
       })
       .addCase(getAllCategoryList.rejected, (state, action) => {
+        state.isCategoryLoading = false;
+        state.isCategoryError = true;
+        state.categoryMessage = action.payload;
+      })
+      .addCase(getCategoryDetails.pending, (state) => {
+        state.isCategoryLoading = true;
+      })
+      .addCase(getCategoryDetails.fulfilled, (state, action) => {
+        state.isCategoryLoading = false;
+        state.isCategorySuccess = true;
+        state.categoryDetails = action.payload;
+      })
+      .addCase(getCategoryDetails.rejected, (state, action) => {
         state.isCategoryLoading = false;
         state.isCategoryError = true;
         state.categoryMessage = action.payload;

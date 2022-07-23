@@ -1,7 +1,33 @@
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
-import Pagination from "../../../common_components/Pagination";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import LoadingSpinner from "../../common_components/LoadingSpinner";
+import { getAdminList, reset } from "../../features/admin/adminSlice";
+import PageNotFound from "../../Error/PageNotFound";
 import SingleAdminTableItem from "./components/SingleAdminTableItem";
+
 const AdminList = () => {
+  const dispatch = useDispatch();
+  //get initial state from admin store
+  const { adminInfo, isAdminLoading, isAdminError } = useSelector(
+    (state) => state.admin
+  );
+
+  //get admin list when page load
+  useEffect(() => {
+    dispatch(getAdminList());
+    return () => reset();
+  }, []);
+
+  //if there are error
+  if (isAdminError) {
+    return <PageNotFound />;
+  }
+
+  //if the page is loading
+  if (isAdminLoading) {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="admin-list">
       {/* top */}
@@ -22,11 +48,14 @@ const AdminList = () => {
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-          <SingleAdminTableItem />
+          {adminInfo &&
+            adminInfo.map((i, index) => {
+              return (
+                <SingleAdminTableItem {...i} key={index} count={index + 1} />
+              );
+            })}
         </MDBTableBody>
       </MDBTable>
-      {/* pagination */}
-      <Pagination />
     </div>
   );
 };

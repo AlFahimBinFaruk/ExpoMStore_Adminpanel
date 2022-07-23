@@ -1,14 +1,26 @@
 import { MDBSwitch, MDBIcon } from "mdb-react-ui-kit";
+import { useDispatch } from "react-redux";
+import { manageCategoryStatus } from "../../../../features/category/categorySlice";
 
-const SingleCategoryTableItem = () => {
+const SingleCategoryTableItem = ({ count, _id, title, thumbnail, status }) => {
+  const dispatch = useDispatch();
+  //handleSwitchChange
+  const handleSwitchChange = (isSelect, id) => {
+    if (isSelect) {
+      dispatch(manageCategoryStatus({ id, data: { status: "deactive" } }));
+    }
+    if (!isSelect) {
+      dispatch(manageCategoryStatus({ id, data: { status: "active" } }));
+    }
+  };
   return (
     <tr>
-      <th scope="row">1</th>
-      <td>4234</td>
-      <td>Test title</td>
+      <th scope="row">{count}</th>
+      <td>{_id}</td>
+      <td>{title}</td>
       <td>
         <img
-          src="https://th.bing.com/th/id/OIP.iN7b7OveHW9aSx611Yh0owHaHa?w=186&h=186&c=7&r=0&o=5&pid=1.7"
+          src={thumbnail}
           height={30}
           width={30}
           className="rounded-circle"
@@ -16,7 +28,12 @@ const SingleCategoryTableItem = () => {
         />
       </td>
       <td>
-        <MDBSwitch id="flexSwitchCheckDefault" label="Active" />
+        <MDBSwitch
+          id="flexSwitchCheckDefault"
+          label={status}
+          checked={status === "checked" ? true : false}
+          onChange={(value) => handleSwitchChange(value, _id)}
+        />
       </td>
       <td>
         <MDBIcon far icon="edit" />

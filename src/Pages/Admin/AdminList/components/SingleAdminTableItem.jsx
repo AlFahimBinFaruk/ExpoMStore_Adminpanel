@@ -1,16 +1,41 @@
 import { MDBSwitch } from "mdb-react-ui-kit";
+import { useDispatch } from "react-redux";
+import { manageAdminStatus } from "../../features/admin/adminSlice";
 
-const SingleAdminTableItem = () => {
+const SingleAdminTableItem = ({
+  count,
+  _id,
+  username,
+  email,
+  role,
+  createdAt,
+  status,
+}) => {
+  const dispatch = useDispatch();
+  //handleSwitchChange
+  const handleSwitchChange = (isSelect, id) => {
+    if (isSelect) {
+      dispatch(manageAdminStatus({ id, data: { status: "deactive" } }));
+    }
+    if (!isSelect) {
+      dispatch(manageAdminStatus({ id, data: { status: "active" } }));
+    }
+  };
   return (
     <tr>
-      <th scope="row">1</th>
-      <td>4234</td>
-      <td>Test title</td>
-      <td>Test@title.com</td>
-      <td>super admin</td>
-      <td>12 july 2022</td>
+      <th scope="row">{count}</th>
+      <td>{_id}</td>
+      <td>{username}</td>
+      <td>{email}</td>
+      <td>{role}</td>
+      <td>{createdAt}</td>
       <td>
-        <MDBSwitch id="flexSwitchCheckDefault" label="Active" />
+        <MDBSwitch
+          id="flexSwitchCheckDefault"
+          label={status}
+          checked={status === "checked" ? true : false}
+          onChange={(value) => handleSwitchChange(value, _id)}
+        />
       </td>
     </tr>
   );

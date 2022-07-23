@@ -41,7 +41,7 @@ export const addProduct = createAsyncThunk(
  */
 export const getAllProductList = createAsyncThunk(
   "product/getAllProductList",
-  async ({ pageNo }, thunkAPI) => {
+  async (pageNo, thunkAPI) => {
     try {
       //get the admin token ..
       const token = thunkAPI.getState().admin.adminInfo.token;

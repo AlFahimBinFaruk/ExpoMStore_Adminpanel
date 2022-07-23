@@ -1,7 +1,35 @@
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
-import Pagination from "../../../common_components/Pagination";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import LoadingSpinner from "../../../common_components/LoadingSpinner";
+import { getUserList, reset } from "../../../features/user/userSlice";
+import ServerErrorPage from "../../Error/ServerErrorPage";
 import SingleUserTableItem from "./components/SingleUserTableItem";
+
 const UserList = () => {
+  const dispatch = useDispatch();
+  //get initial state from user store
+  const { userList, isUserLoading, isUserError } = useSelector(
+    (state) => state.user
+  );
+  //by default one time ,and then everytime pageNo changes call it..
+  useEffect(() => {
+    dispatch(getUserList());
+
+    return () => {
+      reset();
+    };
+  }, [dispatch]);
+
+  //if there are error
+  if (isUserError) {
+    return <ServerErrorPage />;
+  }
+
+  //if the page is loading
+  if (isUserLoading) {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="user-list">
       {/* top */}
@@ -21,11 +49,14 @@ const UserList = () => {
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-          <SingleUserTableItem />
+          {userList &&
+            userList.map((i, index) => {
+              return (
+                <SingleUserTableItem count={index + 1} {...i} key={index} />
+              );
+            })}
         </MDBTableBody>
       </MDBTable>
-      {/* pagination */}
-      <Pagination />
     </div>
   );
 };

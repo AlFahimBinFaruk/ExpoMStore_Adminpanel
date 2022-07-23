@@ -17,7 +17,7 @@ const initialState = {
  */
 export const getAllOrderList = createAsyncThunk(
   "order/getAllOrderList",
-  async ({ pageNo }, thunkAPI) => {
+  async (pageNo, thunkAPI) => {
     try {
       //get the admin token ..
       const token = thunkAPI.getState().admin.adminInfo.token;
