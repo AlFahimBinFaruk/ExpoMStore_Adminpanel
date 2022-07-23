@@ -15,14 +15,14 @@ const getUserList = async (token) => {
 };
 
 //manageUserStatus
-const manageUserStatus = async (data, token) => {
+const manageUserStatus = async (id,data, token) => {
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
     },
   };
   const response = await axios.patch(
-    `${API_URL}/manage-user-status/:id`,
+    `${API_URL}/manage-user-status/${id}`,
     data,
     config
   );

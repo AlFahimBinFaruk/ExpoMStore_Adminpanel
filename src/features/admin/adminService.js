@@ -58,14 +58,14 @@ const getAdminList = async (token) => {
 };
 
 //manageAdminStatus
-const manageAdminStatus = async (data, token) => {
+const manageAdminStatus = async (id, data, token) => {
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
     },
   };
   const response = await axios.patch(
-    `${API_URL}/manage-status/:id`,
+    `${API_URL}/manage-status/${id}`,
     data,
     config
   );

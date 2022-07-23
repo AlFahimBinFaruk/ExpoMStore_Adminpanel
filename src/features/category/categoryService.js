@@ -1,9 +1,9 @@
 import axios from "axios";
 //api route
-const API_URL = `${process.env.REACT_APP_BASE_URL}/api/product`;
+const API_URL = `${process.env.REACT_APP_BASE_URL}/api/category`;
 
-//addProduct
-const addProduct = async (data, token) => {
+//add new category
+const addCategory = async (data, token) => {
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
@@ -14,28 +14,23 @@ const addProduct = async (data, token) => {
   return response.data;
 };
 
-//getAllProductList
-const getAllProductList = async (pageNo, token) => {
+//getAllCategoryList
+const getAllCategoryList = async (pageNo, token) => {
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
     },
   };
   const response = await axios.get(
-    `${API_URL}/get-all-product-list?pageNo=${pageNo}`,
+    `${API_URL}/all-category-list?pageNo=${pageNo}`,
     config
   );
 
   return response.data;
 };
-//getProductDetails
-const getProductDetails = async (id) => {
-  const response = await axios.get(`${API_URL}/details/${id}`);
-  return response.data;
-};
 
-//editProduct
-const editProduct = async (id, data, token) => {
+//editCategory
+const editCategory = async (id, data, token) => {
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
@@ -46,8 +41,8 @@ const editProduct = async (id, data, token) => {
   return response.data;
 };
 
-//manageProductStatus
-const manageProductStatus = async (id, data, token) => {
+//manageCategoryStatus
+const manageCategoryStatus = async (id, data, token) => {
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
@@ -62,8 +57,8 @@ const manageProductStatus = async (id, data, token) => {
   return response.data;
 };
 
-//deleteProduct
-const deleteProduct = async (id, token) => {
+//delete category
+const deleteCategory = async (id, token) => {
   const config = {
     headers: {
       authorization: `Bearer ${token}`,
@@ -76,12 +71,11 @@ const deleteProduct = async (id, token) => {
 
 //export all these functions
 const userService = {
-  addProduct,
-  getAllProductList,
-  getProductDetails,
-  deleteProduct,
-  editProduct,
-  manageProductStatus,
+  addCategory,
+  getAllCategoryList,
+  deleteCategory,
+  editCategory,
+  manageCategoryStatus,
 };
 
 export default userService;

@@ -39,11 +39,11 @@ export const getUserList = createAsyncThunk(
  */
 export const manageUserStatus = createAsyncThunk(
   "user/manageUserStatus",
-  async (data, thunkAPI) => {
+  async ({id,data}, thunkAPI) => {
     try {
       //get the admin token ..
       const token = thunkAPI.getState().admin.adminInfo.token;
-      return await userService.manageUserStatus(data, token);
+      return await userService.manageUserStatus(id,data, token);
     } catch (error) {
       const userMessage =
         (error.response &&
