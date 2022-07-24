@@ -1,58 +1,115 @@
-import { MDBBtn, MDBCol, MDBTable, MDBTableBody } from "mdb-react-ui-kit";
-import { useState } from "react";
+import {
+  MDBBtn,
+  MDBCol,
+  MDBInput,
+  MDBTable,
+  MDBTableBody,
+} from "mdb-react-ui-kit";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import LoadingSpinner from "../../../common_components/LoadingSpinner";
+import {
+  getOrderDetails,
+  manageOrderStatus,
+} from "../../../features/order/orderSlice";
+import ServerErrorPage from "../../Error/ServerErrorPage";
 import SingleOrderDetailsItem from "./components/SingleOrderDetailsItem";
+import { useGlobalAlertContext } from "../../../contexts/alertContext";
 
 const OrderDetails = () => {
-  const [count, setcount] = useState([1, 2, 3, 4, 5, 6]);
+  const { id } = useParams();
+  let { setShowAlert } = useGlobalAlertContext();
+  const dispatch = useDispatch();
+
+  //get initial state from store
+  const { orderDetails, isOrderLoading, isOrderError, isOrderSuccess } =
+    useSelector((state) => state.order);
+  //orderdetails info
+  let { _id, userDetails, total, paymentStatus, orderStatus, tranId, address } =
+    orderDetails || false;
+
+  //new order staus
+  const [newOrderStatus, setNewOrderStatus] = useState("");
+
+  //handle order update status
+  const handleOrderUpdateStatus = () => {
+    if (newOrderStatus) {
+      dispatch(
+        manageOrderStatus({ id: _id, data: { status: newOrderStatus } })
+      );
+    }
+  };
+
+  //by default one time ,and then everytime pageNo changes call it..
+  useEffect(() => {
+    dispatch(getOrderDetails(id));
+  }, [dispatch, id]);
+
+  //if opt is successful
+  if (isOrderSuccess) {
+    setShowAlert({ msg: "Status updated!", color: "success" });
+  }
+  //if there are error
+  if (isOrderError) {
+    return <ServerErrorPage />;
+  }
+  //if the page is loading
+  if (isOrderLoading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <MDBCol size="12" lg="6" className="mx-auto py-5">
-      <h6 className="mb-4">Order Id:43534435</h6>
+      <h6 className="mb-4">Order Id:{_id}</h6>
       <MDBTable>
         {/* table body */}
         <MDBTableBody>
-          {count.map((i) => {
+          {orderDetails?.orderDetails.map((i) => {
             return <SingleOrderDetailsItem {...i} />;
           })}
         </MDBTableBody>
       </MDBTable>
       <div className="my-5">
         <h6>
-          <span className="text-muted">Total:</span>$42
+          <span className="text-muted">TranId:</span>${tranId}
+        </h6>
+        <h6>
+          <span className="text-muted">Total:</span>${total}
         </h6>
 
         <h6>
           <span className="text-muted">payment status:</span>
-          pending
-        </h6>
-        <h6>
-          <span className="text-muted">order type:</span>
-          test
+          {paymentStatus}
         </h6>
         <h6>
           <span className="text-muted">address:</span>
-          test
+          {address}
         </h6>
         <h6>
           <span className="text-muted">email:</span>
-          test
+          {userDetails?.email}
         </h6>
       </div>
       {/* order status */}
       <div className="order status my-5">
         <h6>
           <span className="text-muted"> order status:</span>
-          pending
+          {orderStatus}
         </h6>
         {/* order staus selector */}
         <div className="mb-2">
-          <small className="fw-bold">Select new order status:</small>
-          <select className="form-select form-select-sm">
-            <option value="admin">Admin</option>
-            <option value="delivery-man">Delivery Man</option>
-          </select>
+          <small className="fw-bold">New order status:</small>
+          <MDBInput
+            type="text"
+            value={newOrderStatus}
+            onChange={(e) => setNewOrderStatus(e.target.value)}
+          />
         </div>
         {/* update btn */}
-        <MDBBtn block>Update order status</MDBBtn>
+        <MDBBtn block onClick={handleOrderUpdateStatus}>
+          Update order status
+        </MDBBtn>
       </div>
     </MDBCol>
   );

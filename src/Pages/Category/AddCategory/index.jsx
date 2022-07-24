@@ -4,12 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "../../../common_components/LoadingSpinner";
 import { addCategory } from "../../../features/category/categorySlice";
 import { useGlobalAlertContext } from "../../../contexts/alertContext";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import handleFileUpload from "../../../utils/handleFileUpload";
 
 const AddCategory = () => {
   let { setShowAlert } = useGlobalAlertContext();
@@ -21,56 +16,22 @@ const AddCategory = () => {
   //data
   const [title, setTitle] = useState("");
   const [thumbnail, setThumbnail] = useState("");
-  //upload progress
-  const [uploadProgress, setUploadProgress] = useState("");
   //handle submit
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (title && thumbnail) {
-      const storage = getStorage();
-      const storageRef = ref(storage, thumbnail.name + new Date());
-      const uploadTask = uploadBytesResumable(storageRef, thumbnail);
-
-      // Listen for state changes, errors, and completion of the upload.
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // Get task progress
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadProgress(progress);
-          // eslint-disable-next-line default-case
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {
-          // eslint-disable-next-line default-case
-          switch (error.code) {
-            case "storage/unauthorized":
-              break;
-            case "storage/canceled":
-              break;
-            case "storage/unknown":
-              break;
-          }
-        },
-        () => {
-          // Upload completed successfully, now we can get the download URL
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const data = {
-              title,
-              thumbnail: downloadURL,
-            };
-            //add category
-            dispatch(addCategory(data));
-          });
-        }
-      );
+      handleFileUpload(thumbnail)
+        .then((res) => {
+          console.log("res", res);
+          const data = {
+            title,
+            thumbnail: "",
+          };
+          //add category
+          dispatch(addCategory(data));
+        })
+        .catch(() => {
+          setShowAlert({ msg: "Error Occrued!", color: "danger" });
+        });
     } else {
       setShowAlert({ msg: "Provide all info", color: "danger" });
     }

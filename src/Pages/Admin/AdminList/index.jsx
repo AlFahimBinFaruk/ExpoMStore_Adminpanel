@@ -16,8 +16,8 @@ const AdminList = () => {
   //get admin list when page load
   useEffect(() => {
     dispatch(getAdminList());
-    return () => reset();
-  }, []);
+    return () => dispatch(reset());
+  }, [dispatch]);
 
   //if there are error
   if (isAdminError) {

@@ -17,7 +17,7 @@ const UserList = () => {
     dispatch(getUserList());
 
     return () => {
-      reset();
+      dispatch(reset());
     };
   }, [dispatch]);
 

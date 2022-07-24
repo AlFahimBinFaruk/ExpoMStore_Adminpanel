@@ -10,6 +10,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import handleFileUpload from "../../../utils/handleFileUpload";
 const AddProduct = () => {
   let { setShowAlert } = useGlobalAlertContext();
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const AddProduct = () => {
   const { isProductLoading, isProductError, isProductSuccess } = useSelector(
     (state) => state.product
   );
-  //get initial state from admin store
+  //get initial state from category store
   const { categoryList } = useSelector((state) => state.category);
 
   //form data
@@ -30,7 +31,7 @@ const AddProduct = () => {
   let { title, price, description, categoryDetails } = formData;
   const [thumbnail, setThumbnail] = useState("");
   //upload progress
-  const [uploadProgress, setUploadProgress] = useState("");
+  //const [uploadProgress, setUploadProgress] = useState("");
   //handle change of input
   const handleChange = (e) => {
     setFormData((prevState) => {
@@ -43,55 +44,23 @@ const AddProduct = () => {
   //handle submit
   const handleSubmit = () => {
     if (title && thumbnail && categoryDetails && price && description) {
-      const storage = getStorage();
-      const storageRef = ref(storage, thumbnail.name + new Date());
-      const uploadTask = uploadBytesResumable(storageRef, thumbnail);
-
-      // Listen for state changes, errors, and completion of the upload.
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // Get task progress
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadProgress(progress);
-          // eslint-disable-next-line default-case
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {
-          // eslint-disable-next-line default-case
-          switch (error.code) {
-            case "storage/unauthorized":
-              break;
-            case "storage/canceled":
-              break;
-            case "storage/unknown":
-              break;
-          }
-        },
-        () => {
-          // Upload completed successfully, now we can get the download URL
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const data = {
-              title,
-              thumbnail: downloadURL,
-              price: Number(price),
-              description,
-              categoryId: categoryDetails.categoryId,
-              categoryTitle: categoryDetails.categoryTitle,
-            };
-            //add product
-            dispatch(addProduct(data));
-          });
-        }
-      );
+      handleFileUpload(thumbnail)
+        .then((res) => {
+          console.log("res", res);
+          const data = {
+            title,
+            thumbnail: "downloadURL",
+            price: Number(price),
+            description,
+            categoryId: categoryDetails.categoryId,
+            categoryTitle: categoryDetails.categoryTitle,
+          };
+          //add product
+          dispatch(addProduct(data));
+        })
+        .catch(() => {
+          setShowAlert({ msg: "Error Occrued!", color: "danger" });
+        });
     } else {
       setShowAlert({ msg: "Provide all info", color: "danger" });
     }

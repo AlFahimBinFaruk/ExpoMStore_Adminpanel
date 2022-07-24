@@ -1,7 +1,26 @@
 import { MDBIcon } from "mdb-react-ui-kit";
-
+import { getStorage, ref, deleteObject } from "firebase/storage";
+import { useGlobalAlertContext } from "../contexts/alertContext";
 //PrevContent componet
-const PrevThumbnail = () => {
+const PrevThumbnail = ({ thumbnail, setThumbnailDeleted }) => {
+  let { setShowAlert } = useGlobalAlertContext();
+
+  const deleteContent = () => {
+    const storage = getStorage();
+
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, thumbnail);
+
+    // Delete the file
+    deleteObject(desertRef)
+      .then(() => {
+        setShowAlert({ msg: "deleted successfully", color: "success" });
+        setThumbnailDeleted(true);
+      })
+      .catch((error) => {
+        setShowAlert({ msg: "failded to delete file ", color: "danger" });
+      });
+  };
   return (
     <div className="prev-content my-3 ">
       <div>
@@ -14,7 +33,7 @@ const PrevThumbnail = () => {
         {/* content */}
         <div className="content col-10">
           <img
-            src="https://th.bing.com/th/id/OIP.iN7b7OveHW9aSx611Yh0owHaHa?w=186&h=186&c=7&r=0&o=5&pid=1.7"
+            src={thumbnail}
             height={150}
             className="border border-warning"
             alt="Fissure in Sandstone"
@@ -22,7 +41,13 @@ const PrevThumbnail = () => {
         </div>
         {/* content delete btn */}
 
-        <MDBIcon fas icon="trash" color="danger" role="button" />
+        <MDBIcon
+          fas
+          icon="trash"
+          color="danger"
+          role="button"
+          onClick={deleteContent}
+        />
       </div>
     </div>
   );

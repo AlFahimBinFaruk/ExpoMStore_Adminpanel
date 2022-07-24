@@ -22,7 +22,7 @@ const CategoryList = () => {
     dispatch(getAllCategoryList(pageNo));
 
     return () => {
-      reset();
+      dispatch(reset());
     };
   }, [dispatch, pageNo]);
 

@@ -5,12 +5,12 @@ import {
   MDBCardText,
 } from "mdb-react-ui-kit";
 
-const SingleDashboardCard = () => {
+const SingleDashboardCard = ({title,value}) => {
   return (
     <MDBCard className="h-100 shadow">
       <MDBCardBody>
-        <MDBCardTitle>Total Users:</MDBCardTitle>
-        <MDBCardText>9+</MDBCardText>
+        <MDBCardTitle>{title}:</MDBCardTitle>
+        <MDBCardText>{value}+</MDBCardText>
       </MDBCardBody>
     </MDBCard>
   );

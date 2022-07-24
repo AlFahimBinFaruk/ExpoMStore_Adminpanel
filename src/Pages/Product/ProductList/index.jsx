@@ -22,7 +22,7 @@ const ProductList = () => {
     dispatch(getAllProductList(pageNo));
 
     return () => {
-      reset();
+      dispatch(reset());
     };
   }, [dispatch, pageNo]);
 
