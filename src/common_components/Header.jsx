@@ -1,4 +1,5 @@
-import { MDBContainer, MDBNavbar, MDBBtn, MDBIcon } from "mdb-react-ui-kit";
+import { MDBContainer, MDBNavbar, MDBIcon } from "mdb-react-ui-kit";
+import { Link } from "react-router-dom";
 const Header = () => {
   const handleToggle = () => {
     document.body.classList.toggle("sb-sidenav-toggled");
@@ -18,9 +19,9 @@ const Header = () => {
           role="button"
         />
 
-        <a href="/" className="fw-bold text-dark">
-          My Account
-        </a>
+        <Link to="/account">
+          <span className="fw-bold text-dark">My Account</span>
+        </Link>
       </MDBContainer>
     </MDBNavbar>
   );

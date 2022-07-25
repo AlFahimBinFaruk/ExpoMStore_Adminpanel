@@ -10,7 +10,6 @@ const addCategory = async (data, token) => {
     },
   };
   const response = await axios.post(`${API_URL}/add`, data, config);
-
   return response.data;
 };
 
@@ -36,7 +35,6 @@ const getCategoryDetails = async (id, token) => {
     },
   };
   const response = await axios.get(`${API_URL}/details/${id}`, config);
-
   return response.data;
 };
 //editCategory

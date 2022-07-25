@@ -5,10 +5,6 @@ const API_URL = `${process.env.REACT_APP_BASE_URL}/api/admin`;
 //register
 const register = async (data) => {
   const response = await axios.post(`${API_URL}`, data);
-  //if we get data in response we will save it to localstorage
-  if (response.data) {
-    localStorage.setItem("esAdmin", JSON.stringify(response.data));
-  }
   return response.data;
 };
 
@@ -16,7 +12,7 @@ const register = async (data) => {
 const login = async (data) => {
   const response = await axios.post(`${API_URL}/login`, data);
   //if we get data in response we will save it to localstorage
-  if (response.data) {
+  if (!response.data.message) {
     localStorage.setItem("esAdmin", JSON.stringify(response.data));
   }
   return response.data;
@@ -34,15 +30,12 @@ const changePassword = async (data, token) => {
     data,
     config
   );
-  if (response.data) {
-    localStorage.removeItem("esAdmin");
-  }
   return response.data;
 };
 
-//logout user
+//logout admin
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.removeItem("esAdmin");
 };
 
 //getAdminList

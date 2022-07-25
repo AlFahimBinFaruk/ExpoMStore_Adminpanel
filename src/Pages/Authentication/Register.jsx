@@ -1,5 +1,5 @@
 import { MDBBtn, MDBCol, MDBContainer, MDBInput } from "mdb-react-ui-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "../../common_components/LoadingSpinner";
 import { useGlobalAlertContext } from "../../contexts/alertContext";
@@ -8,7 +8,7 @@ const Register = () => {
   let { setShowAlert } = useGlobalAlertContext();
   const dispatch = useDispatch();
   //get initial state from admin store
-  const { isAdminLoading, isAdminError, isAdminSuccess, adminMessage } =
+  const { isAdminLoading, isAdminSuccess, adminMessage } =
     useSelector((state) => state.admin);
   //form data
   const [formData, setFormData] = useState({
@@ -40,26 +40,27 @@ const Register = () => {
         role,
       };
       dispatch(register(data));
+      //if register is successfull
+      if (isAdminSuccess) {
+        setShowAlert({
+          msg: "Registered,wait for admin to approve.",
+          color: "success",
+        });
+      }
     } else {
       setShowAlert({ msg: "Provide all info", color: "danger" });
     }
   };
 
-  //if there are error
-  if (isAdminError) {
-    setShowAlert({
-      msg: adminMessage,
-      color: "danger",
-    });
-  }
-
-  //if register is successfull
-  if (isAdminSuccess) {
-    setShowAlert({
-      msg: "Registered,wait for admin to approve.",
-      color: "success",
-    });
-  }
+  useEffect(() => {
+    //if there are messages
+    if (adminMessage) {
+      setShowAlert({
+        msg: adminMessage.message,
+        color: "danger",
+      });
+    }
+  }, [adminMessage, setShowAlert]);
 
   //if the page is loading
   if (isAdminLoading) {

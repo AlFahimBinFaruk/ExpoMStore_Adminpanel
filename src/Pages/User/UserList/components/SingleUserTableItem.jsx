@@ -12,12 +12,12 @@ const SingleUserTableItem = ({
 }) => {
   const dispatch = useDispatch();
   //handleSwitchChange
-  const handleSwitchChange = (isSelect, id) => {
-    if (isSelect) {
-      dispatch(manageUserStatus({ id, data: { status: "deactive" } }));
-    }
-    if (!isSelect) {
+  const handleSwitchChange = (e, id) => {
+    if (e.target.checked) {
       dispatch(manageUserStatus({ id, data: { status: "active" } }));
+    }
+    if (!e.target.checked) {
+      dispatch(manageUserStatus({ id, data: { status: "deactive" } }));
     }
   };
   return (
@@ -31,7 +31,7 @@ const SingleUserTableItem = ({
         <MDBSwitch
           id="flexSwitchCheckDefault"
           label={status}
-          checked={status === "checked" ? true : false}
+          checked={status === "active" ? true : false}
           onChange={(value) => handleSwitchChange(value, _id)}
         />
       </td>

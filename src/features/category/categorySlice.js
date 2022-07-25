@@ -174,7 +174,7 @@ export const categorySlice = createSlice({
       .addCase(addCategory.fulfilled, (state, action) => {
         state.isCategoryLoading = false;
         state.isCategorySuccess = true;
-        state.categoryList.push(action.payload);
+        state.categoryList.categoryList.push(action.payload);
       })
       .addCase(addCategory.rejected, (state, action) => {
         state.isCategoryLoading = false;
@@ -213,7 +213,7 @@ export const categorySlice = createSlice({
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.isCategoryLoading = false;
         state.isCategorySuccess = true;
-        state.categoryList = state.categoryList.filter(
+        state.categoryList = state.categoryList.categoryList.filter(
           (category) => category._id !== action.payload.id
         );
       })
@@ -228,11 +228,14 @@ export const categorySlice = createSlice({
       .addCase(editCategory.fulfilled, (state, action) => {
         state.isCategoryLoading = false;
         state.isCategorySuccess = true;
-        state.categoryList = state.categoryList.filter((category) => {
-          if (category._id === action.payload._id) {
-            return action.payload;
+        state.categoryList.categoryList = state.categoryList.categoryList.map(
+          (category) => {
+            if (category._id === action.payload._id) {
+              return action.payload;
+            }
+            return category;
           }
-        });
+        );
       })
       .addCase(editCategory.rejected, (state, action) => {
         state.isCategoryLoading = false;
@@ -245,11 +248,14 @@ export const categorySlice = createSlice({
       .addCase(manageCategoryStatus.fulfilled, (state, action) => {
         state.isCategoryLoading = false;
         state.isCategorySuccess = true;
-        state.categoryList = state.categoryList.filter((category) => {
-          if (category._id === action.payload._id) {
-            return action.payload;
+        state.categoryList.categoryList = state.categoryList.categoryList.map(
+          (category) => {
+            if (category._id === action.payload._id) {
+              return action.payload;
+            }
+            return category;
           }
-        });
+        );
       })
       .addCase(manageCategoryStatus.rejected, (state, action) => {
         state.isCategoryLoading = false;

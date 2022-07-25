@@ -1,5 +1,6 @@
 import { MDBSwitch, MDBIcon } from "mdb-react-ui-kit";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { manageProductStatus } from "../../../../features/product/productSlice";
 
 const SingleProductTableItem = ({
@@ -12,13 +13,14 @@ const SingleProductTableItem = ({
   status,
 }) => {
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   //handleSwitchChange
-  const handleSwitchChange = (isSelect, id) => {
-    if (isSelect) {
-      dispatch(manageProductStatus({ id, data: { status: "deactive" } }));
-    }
-    if (!isSelect) {
+  const handleSwitchChange = (e, id) => {
+    if (e.target.checked) {
       dispatch(manageProductStatus({ id, data: { status: "active" } }));
+    }
+    if (!e.target.checked) {
+      dispatch(manageProductStatus({ id, data: { status: "deactive" } }));
     }
   };
   return (
@@ -27,7 +29,7 @@ const SingleProductTableItem = ({
       <td>{_id}</td>
       <td>{title}</td>
       <td>{price}</td>
-      <td>{categoryDetails.title}</td>
+      <td>{categoryDetails?.title}</td>
       <td>
         <img
           src={thumbnail}
@@ -41,12 +43,17 @@ const SingleProductTableItem = ({
         <MDBSwitch
           id="flexSwitchCheckDefault"
           label={status}
-          checked={status === "checked" ? true : false}
+          checked={status === "active" ? true : false}
           onChange={(value) => handleSwitchChange(value, _id)}
         />
       </td>
       <td>
-        <MDBIcon far icon="edit" />
+        <MDBIcon
+          far
+          icon="edit"
+          onClick={() => navigate(`/product/edit/${_id}`)}
+          role="button"
+        />
       </td>
     </tr>
   );

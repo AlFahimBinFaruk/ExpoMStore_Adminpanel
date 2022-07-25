@@ -1,5 +1,5 @@
 import { MDBBtn, MDBCol, MDBInput } from "mdb-react-ui-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "../../../common_components/LoadingSpinner";
 import { addCategory } from "../../../features/category/categorySlice";
@@ -16,38 +16,38 @@ const AddCategory = () => {
   //data
   const [title, setTitle] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+
+  //handle add category
+  const handleAddCategory = (thumbnail) => {
+    const data = {
+      title,
+      thumbnail,
+    };
+    //add category
+    dispatch(addCategory(data));
+  };
   //handle submit
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (title && thumbnail) {
-      handleFileUpload(thumbnail)
-        .then((res) => {
-          console.log("res", res);
-          const data = {
-            title,
-            thumbnail: "",
-          };
-          //add category
-          dispatch(addCategory(data));
-        })
-        .catch(() => {
-          setShowAlert({ msg: "Error Occrued!", color: "danger" });
-        });
+      handleFileUpload(thumbnail, handleAddCategory);
     } else {
       setShowAlert({ msg: "Provide all info", color: "danger" });
     }
   };
 
-  //if added successfully
-  if (isCategorySuccess) {
-    setShowAlert({ msg: "Category added", color: "success" });
-  }
+  useEffect(() => {
+    //if added successfully
+    if (isCategorySuccess) {
+      setShowAlert({ msg: "Category added", color: "success" });
+    }
 
-  //if there are error
-  if (isCategoryError) {
-    setShowAlert({ msg: "Failed to add category", color: "danger" });
-  }
+    //if there are error
+    if (isCategoryError) {
+      setShowAlert({ msg: "Failed to add category", color: "danger" });
+    }
+  }, [isCategoryError, isCategorySuccess, setShowAlert]);
 
-  //if the page is loading
+  // //if the page is loading
   if (isCategoryLoading) {
     return <LoadingSpinner />;
   }

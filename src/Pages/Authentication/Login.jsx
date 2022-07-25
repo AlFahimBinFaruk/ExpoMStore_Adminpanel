@@ -1,5 +1,5 @@
 import { MDBBtn, MDBCol, MDBContainer, MDBInput } from "mdb-react-ui-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "../../common_components/LoadingSpinner";
@@ -11,8 +11,9 @@ const Login = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   //get initial state from admin store
-  const { isAdminLoading, isAdminError, isAdminSuccess, adminMessage } =
-    useSelector((state) => state.admin);
+  const { isAdminLoading, isAdminSuccess, adminMessage } = useSelector(
+    (state) => state.admin
+  );
   //form data
   const [formData, setFormData] = useState({
     username: "",
@@ -39,27 +40,29 @@ const Login = () => {
         password,
       };
       dispatch(login(data));
+
+      //if register is successfull
+      if (isAdminSuccess) {
+        setShowAlert({
+          msg: adminMessage.adminMessage,
+          color: "success",
+        });
+        navigate("/");
+      }
     } else {
       setShowAlert({ msg: "Provide all info", color: "danger" });
     }
   };
 
-  //if there are error
-  if (isAdminError) {
-    setShowAlert({
-      msg: adminMessage,
-      color: "danger",
-    });
-  }
-
-  //if register is successfull
-  if (isAdminSuccess) {
-    setShowAlert({
-      msg: "Login Successful!!",
-      color: "success",
-    });
-    navigate("/");
-  }
+  useEffect(() => {
+    //if there are messages
+    if (adminMessage) {
+      setShowAlert({
+        msg: adminMessage.message,
+        color: "danger",
+      });
+    }
+  }, [adminMessage, setShowAlert]);
 
   //if the page is loading
   if (isAdminLoading) {

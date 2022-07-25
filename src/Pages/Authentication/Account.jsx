@@ -1,5 +1,5 @@
 import { MDBBtn, MDBCol, MDBIcon, MDBInput } from "mdb-react-ui-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "../../common_components/LoadingSpinner";
@@ -43,13 +43,9 @@ const Account = () => {
         newPassword,
       };
       dispatch(changePassword(data));
-      //if register is successfull
+      //if password change is successfull
       if (isAdminSuccess) {
-        setShowAlert({
-          msg: "Password changed,login again",
-          color: "success",
-        });
-        navigate("/login");
+        handleLogout();
       }
     } else {
       setShowAlert({ msg: "Provide all info", color: "danger" });
@@ -64,17 +60,19 @@ const Account = () => {
         msg: "Logout Successful!!",
         color: "success",
       });
-      navigate("/login");
+      navigate("/");
     }
   };
 
-  //if there are error
-  if (isAdminError) {
-    setShowAlert({
-      msg: adminMessage,
-      color: "danger",
-    });
-  }
+  useEffect(() => {
+    //if there are messages
+    if (adminMessage) {
+      setShowAlert({
+        msg: adminMessage.message,
+        color: "danger",
+      });
+    }
+  }, [adminMessage, isAdminError, setShowAlert]);
 
   //if the page is loading
   if (isAdminLoading) {
@@ -83,7 +81,9 @@ const Account = () => {
   return (
     <div className="vh-100 d-flex justify-content-center align-items-center">
       <MDBCol size="12" md="6" lg="3">
-        <h5 className="mb-5 text-dark text-center">Logged in as Manager</h5>
+        <h5 className="mb-5 text-dark text-center">
+          Logged in as {adminInfo?.role}
+        </h5>
         {/* top */}
         <div className="top d-flex justify-content-between align-items-baseline mb-3">
           <h6>Account Settings</h6>

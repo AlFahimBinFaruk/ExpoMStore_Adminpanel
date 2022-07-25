@@ -20,7 +20,7 @@ export const getDashboardOverview = createAsyncThunk(
     try {
       //get the admin token ..
       const token = thunkAPI.getState().admin.adminInfo.token;
-      return await dashboardService.addCategory(token);
+      return await dashboardService.getDashboardOverview(token);
     } catch (error) {
       const dashboardMessage =
         (error.response &&

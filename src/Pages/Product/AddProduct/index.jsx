@@ -1,15 +1,10 @@
 import { MDBBtn, MDBCol, MDBInput, MDBTextArea } from "mdb-react-ui-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingSpinner from "../../../common_components/LoadingSpinner";
 import { addProduct } from "../../../features/product/productSlice";
+import { getAllCategoryList } from "../../../features/category/categorySlice";
 import { useGlobalAlertContext } from "../../../contexts/alertContext";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
 import handleFileUpload from "../../../utils/handleFileUpload";
 const AddProduct = () => {
   let { setShowAlert } = useGlobalAlertContext();
@@ -41,40 +36,46 @@ const AddProduct = () => {
       };
     });
   };
+
+  //handle add product
+  const handleAddProduct = (thumbnail) => {
+    categoryDetails = JSON.parse(categoryDetails);
+    const data = {
+      title,
+      thumbnail,
+      price: Number(price),
+      description,
+      categoryId: categoryDetails.categoryId,
+      categoryTitle: categoryDetails.categoryTitle,
+    };
+
+    //add product
+    dispatch(addProduct(data));
+    //if added successfully
+    if (isProductSuccess) {
+      setShowAlert({ msg: "Category added", color: "success" });
+    }
+  };
   //handle submit
   const handleSubmit = () => {
     if (title && thumbnail && categoryDetails && price && description) {
-      handleFileUpload(thumbnail)
-        .then((res) => {
-          console.log("res", res);
-          const data = {
-            title,
-            thumbnail: "downloadURL",
-            price: Number(price),
-            description,
-            categoryId: categoryDetails.categoryId,
-            categoryTitle: categoryDetails.categoryTitle,
-          };
-          //add product
-          dispatch(addProduct(data));
-        })
-        .catch(() => {
-          setShowAlert({ msg: "Error Occrued!", color: "danger" });
-        });
+      handleFileUpload(thumbnail, handleAddProduct);
     } else {
       setShowAlert({ msg: "Provide all info", color: "danger" });
     }
   };
 
-  //if added successfully
-  if (isProductSuccess) {
-    setShowAlert({ msg: "Category added", color: "success" });
-  }
+  useEffect(() => {
+    //if there are error
+    if (isProductError) {
+      setShowAlert({ msg: "Failed to add category", color: "danger" });
+    }
+  }, [isProductError, setShowAlert]);
 
-  //if there are error
-  if (isProductError) {
-    setShowAlert({ msg: "Failed to add category", color: "danger" });
-  }
+  //get all category list
+  useEffect(() => {
+    dispatch(getAllCategoryList());
+  }, [dispatch]);
 
   //if the page is loading
   if (isProductLoading) {
@@ -114,7 +115,7 @@ const AddProduct = () => {
                 categoryList.categoryList.map((i) => {
                   return (
                     <option
-                      value={`{categoryTitle:${i.title},categoryId:${i._id}}`}
+                      value={`{"categoryTitle":"${i.title}","categoryId":"${i._id}"}`}
                     >
                       {i.title}
                     </option>

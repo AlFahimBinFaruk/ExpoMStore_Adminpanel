@@ -1,18 +1,17 @@
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import LoadingSpinner from "../../common_components/LoadingSpinner";
-import { getAdminList, reset } from "../../features/admin/adminSlice";
+import LoadingSpinner from "../../../common_components/LoadingSpinner";
+import { getAdminList, reset } from "../../../features/admin/adminSlice";
 import PageNotFound from "../../Error/PageNotFound";
 import SingleAdminTableItem from "./components/SingleAdminTableItem";
 
 const AdminList = () => {
   const dispatch = useDispatch();
   //get initial state from admin store
-  const { adminInfo, isAdminLoading, isAdminError } = useSelector(
+  const { adminList, isAdminLoading, isAdminError } = useSelector(
     (state) => state.admin
   );
-
   //get admin list when page load
   useEffect(() => {
     dispatch(getAdminList());
@@ -48,8 +47,8 @@ const AdminList = () => {
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-          {adminInfo &&
-            adminInfo.map((i, index) => {
+          {adminList &&
+            adminList.map((i, index) => {
               return (
                 <SingleAdminTableItem {...i} key={index} count={index + 1} />
               );

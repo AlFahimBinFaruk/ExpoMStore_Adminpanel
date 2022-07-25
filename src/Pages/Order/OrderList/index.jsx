@@ -34,7 +34,7 @@ const OrderList = () => {
   }
 
   return (
-    <MDBCol size="12" lg="8" className="mx-auto">
+    <MDBCol size="12" lg="10" className="mx-auto">
       <div className="mb-5 text-center">
         <h5>Order history</h5>
       </div>

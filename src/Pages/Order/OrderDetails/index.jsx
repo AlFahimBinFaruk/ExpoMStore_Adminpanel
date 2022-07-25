@@ -23,7 +23,7 @@ const OrderDetails = () => {
   const dispatch = useDispatch();
 
   //get initial state from store
-  const { orderDetails, isOrderLoading, isOrderError, isOrderSuccess } =
+  const { orderDetails, isOrderLoading, isOrderError } =
     useSelector((state) => state.order);
   //orderdetails info
   let { _id, userDetails, total, paymentStatus, orderStatus, tranId, address } =
@@ -46,14 +46,13 @@ const OrderDetails = () => {
     dispatch(getOrderDetails(id));
   }, [dispatch, id]);
 
-  //if opt is successful
-  if (isOrderSuccess) {
-    setShowAlert({ msg: "Status updated!", color: "success" });
-  }
-  //if there are error
-  if (isOrderError) {
-    return <ServerErrorPage />;
-  }
+  useEffect(() => {
+    //if there are error
+    if (isOrderError) {
+      return <ServerErrorPage />;
+    }
+  }, [isOrderError, setShowAlert]);
+
   //if the page is loading
   if (isOrderLoading) {
     return <LoadingSpinner />;

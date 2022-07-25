@@ -170,7 +170,7 @@ export const productSlice = createSlice({
       .addCase(addProduct.fulfilled, (state, action) => {
         state.isProductLoading = false;
         state.isProductSuccess = true;
-        state.productList.push(action.payload);
+        state.productList.productList.push(action.payload);
       })
       .addCase(addProduct.rejected, (state, action) => {
         state.isProductLoading = false;
@@ -224,11 +224,14 @@ export const productSlice = createSlice({
       .addCase(editProduct.fulfilled, (state, action) => {
         state.isProductLoading = false;
         state.isProductSuccess = true;
-        state.productList = state.productList.filter((product) => {
-          if (product._id === action.payload._id) {
-            return action.payload;
+        state.productList.productList = state.productList.productList.map(
+          (product) => {
+            if (product._id === action.payload._id) {
+              return action.payload;
+            }
+            return product;
           }
-        });
+        );
       })
       .addCase(editProduct.rejected, (state, action) => {
         state.isProductLoading = false;
@@ -241,11 +244,14 @@ export const productSlice = createSlice({
       .addCase(manageProductStatus.fulfilled, (state, action) => {
         state.isProductLoading = false;
         state.isProductSuccess = true;
-        state.productList = state.productList.filter((product) => {
-          if (product._id === action.payload._id) {
-            return action.payload;
+        state.productList.productList = state.productList.productList.map(
+          (product) => {
+            if (product._id === action.payload._id) {
+              return action.payload;
+            }
+            return product;
           }
-        });
+        );
       })
       .addCase(manageProductStatus.rejected, (state, action) => {
         state.isProductLoading = false;

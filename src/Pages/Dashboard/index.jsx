@@ -18,9 +18,9 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(getDashboardOverview());
 
-    return () => {
-      dispatch(reset());
-    };
+    // return () => {
+    //   dispatch(reset());
+    // };
   }, [dispatch]);
 
   //if there are error

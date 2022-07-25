@@ -34,7 +34,7 @@ const PrevThumbnail = ({ thumbnail, setThumbnailDeleted }) => {
         <div className="content col-10">
           <img
             src={thumbnail}
-            height={150}
+            height={80}
             className="border border-warning"
             alt="Fissure in Sandstone"
           />

@@ -19,14 +19,19 @@ import OrderList from "./Pages/Order/OrderList";
 import OrderDetails from "./Pages/Order/OrderDetails";
 import PageNotFound from "./Pages/Error/PageNotFound";
 import ServerErrorPage from "./Pages/Error/ServerErrorPage";
+import Alert from "./common_components/Alert";
+import { useSelector } from "react-redux";
 
 function App() {
-  let role = "admin";
-  let login = true;
+  //get initial state from admin store
+  const { adminInfo } = useSelector((state) => state.admin);
+
   return (
     <div className="d-flex" id="wrapper">
       <BrowserRouter>
-        {login ? (
+        {/* alert */}
+        <Alert />
+        {adminInfo?.role ? (
           <>
             <Sidebar />
             <div id="page-content-wrapper">
@@ -35,7 +40,8 @@ function App() {
               <MDBContainer className="my-5">
                 {/* routes */}
                 <Routes>
-                  {role === "admin" && (
+                  {(adminInfo?.role === "admin" ||
+                    adminInfo?.role === "super admin") && (
                     <>
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/category-list" element={<CategoryList />} />

@@ -5,11 +5,11 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-const handleFileUpload = (thumbnail) => {
+function handleFileUpload (thumbnail,_callback) {
   const storage = getStorage();
   const storageRef = ref(storage, thumbnail.name + new Date());
   const uploadTask = uploadBytesResumable(storageRef, thumbnail);
-
+  
   // Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     "state_changed",
@@ -41,10 +41,11 @@ const handleFileUpload = (thumbnail) => {
     () => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        return downloadURL;
+        _callback(downloadURL)
       });
     }
   );
+  
 };
 
 export default handleFileUpload;

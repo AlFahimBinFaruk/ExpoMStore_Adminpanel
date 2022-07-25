@@ -7,7 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import "./index.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import { AppAlertProvider } from "./contexts/alertContext";
-
+import firebaseApp from "./firebaseConfig";
 const container = document.getElementById("root");
 const root = createRoot(container);
 

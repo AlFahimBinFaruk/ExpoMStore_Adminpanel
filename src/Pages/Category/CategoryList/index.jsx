@@ -9,9 +9,11 @@ import {
 import Pagination from "../../../common_components/Pagination";
 import SingleCategoryTableItem from "./components/SingleCategoryTableItem";
 import ServerErrorPage from "../../Error/ServerErrorPage";
+import { useNavigate } from "react-router-dom";
 
 const CategoryList = () => {
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const [pageNo, setPageNo] = useState(1);
   //get initial state from admin store
   const { categoryList, isCategoryLoading, isCategoryError } = useSelector(
@@ -40,7 +42,9 @@ const CategoryList = () => {
       {/* top */}
       <div className="top d-flex justify-content-between">
         <h5>Category list</h5>
-        <MDBBtn color="success">Add New</MDBBtn>
+        <MDBBtn color="success" onClick={() => navigate("/category/add")}>
+          Add New
+        </MDBBtn>
       </div>
       {/* category list */}
       <MDBTable className="my-5">

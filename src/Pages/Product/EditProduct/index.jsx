@@ -6,6 +6,7 @@ import {
   getProductDetails,
   editProduct,
 } from "../../../features/product/productSlice";
+import { getAllCategoryList } from "../../../features/category/categorySlice";
 import { useGlobalAlertContext } from "../../../contexts/alertContext";
 import PrevCategoryThumbnail from "../../../common_components/PrevThumbnail";
 import { useParams } from "react-router-dom";
@@ -35,10 +36,6 @@ const EditProduct = () => {
   let { newTitle, newCategoryDetails, newPrice, newDescription } = newFormData;
   const [newThumbnail, setNewThumbnail] = useState("");
 
-  if (thumbnail) {
-    setThumbnailDeleted(false);
-  }
-
   //handle change of input
   const handleChange = (e) => {
     setNewFormData((prevState) => {
@@ -49,29 +46,41 @@ const EditProduct = () => {
     });
   };
 
-  //handle update
-  const handleUpdate = () => {
+  //haddle edit category
+  const handleEditCategory = (newThumbnail) => {
     let data = {
       title: newTitle || title,
-      categoryDetails: newCategoryDetails || categoryDetails,
+      categoryDetails: newCategoryDetails
+        ? JSON.parse(newCategoryDetails)
+        : categoryDetails,
       price: Number(newPrice) || price,
       description: newDescription || description,
+      thumbnail: newThumbnail || thumbnail,
     };
-    if (thumbnailDeleted && newThumbnail) {
-      handleFileUpload(newThumbnail)
-        .then((res) => {
-          console.log("res", res);
-          data = { ...data, thumbnail: "F" };
-          //edit category
-          dispatch(editProduct({ id: _id, data }));
-        })
-        .catch(() => {
-          setShowAlert({ msg: "Error Occrued!", color: "danger" });
-        });
-    } else {
-      dispatch(editProduct({ id: _id, data }));
+    console.log("data=>", data);
+    //edit category
+    dispatch(editProduct({ id: _id, data }));
+    //if  successfully
+    if (isProductSuccess) {
+      setShowAlert({ msg: "Category updated", color: "success" });
     }
   };
+
+  //handle update
+  const handleUpdate = () => {
+    if (thumbnailDeleted && newThumbnail) {
+      handleFileUpload(newThumbnail, handleEditCategory);
+    } else {
+      handleEditCategory();
+    }
+  };
+
+  //if thumbnail is available then set thumnail deleted to false
+  useEffect(() => {
+    if (thumbnail) {
+      setThumbnailDeleted(false);
+    }
+  }, [thumbnail]);
 
   //
   useEffect(() => {
@@ -80,14 +89,17 @@ const EditProduct = () => {
     }
   }, [dispatch, id]);
 
-  //if added successfully
-  if (isProductSuccess) {
-    setShowAlert({ msg: "Category added", color: "success" });
-  }
-  //if there are error
-  if (isProductError) {
-    setShowAlert({ msg: "Failed to update category", color: "danger" });
-  }
+  //get all category list
+  useEffect(() => {
+    dispatch(getAllCategoryList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    //if there are error
+    if (isProductError) {
+      setShowAlert({ msg: "Failed to update category", color: "danger" });
+    }
+  }, [isProductError, setShowAlert]);
 
   //if the page is loading
   if (isProductLoading) {
@@ -148,7 +160,7 @@ const EditProduct = () => {
                   categoryList.categoryList.map((i) => {
                     return (
                       <option
-                        value={`{categoryTitle:${i.title},categoryId:${i._id}}`}
+                        value={`{"categoryTitle":"${i.title}","categoryId":"${i._id}"}`}
                       >
                         {i.title}
                       </option>
@@ -171,8 +183,8 @@ const EditProduct = () => {
               <small className="fw-bold">New Price:</small>
               <MDBInput
                 type="number"
-                id="price"
-                value={price}
+                id="newPrice"
+                value={newPrice}
                 onChange={handleChange}
                 placeholder="Enter Your Product Price"
                 size="sm"

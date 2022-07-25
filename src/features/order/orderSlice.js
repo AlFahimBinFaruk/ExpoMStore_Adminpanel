@@ -128,11 +128,15 @@ export const orderSlice = createSlice({
       .addCase(manageOrderStatus.fulfilled, (state, action) => {
         state.isOrderLoading = false;
         state.isOrderSuccess = true;
-        state.orderList = state.orderList.filter((order) => {
-          if (order._id === action.payload._id) {
-            return action.payload;
+        state.orderDetails = action.payload;
+        state.orderList.orderList = state.orderList.orderList.map(
+          (order) => {
+            if (order._id === action.payload._id) {
+              return action.payload;
+            }
+            return order;
           }
-        });
+        );
       })
       .addCase(manageOrderStatus.rejected, (state, action) => {
         state.isOrderLoading = false;

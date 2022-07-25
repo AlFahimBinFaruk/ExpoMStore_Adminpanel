@@ -1,16 +1,17 @@
 import { MDBSwitch, MDBIcon } from "mdb-react-ui-kit";
 import { useDispatch } from "react-redux";
 import { manageCategoryStatus } from "../../../../features/category/categorySlice";
-
+import {useNavigate} from "react-router-dom"
 const SingleCategoryTableItem = ({ count, _id, title, thumbnail, status }) => {
+  let navigate=useNavigate()
   const dispatch = useDispatch();
   //handleSwitchChange
-  const handleSwitchChange = (isSelect, id) => {
-    if (isSelect) {
-      dispatch(manageCategoryStatus({ id, data: { status: "deactive" } }));
-    }
-    if (!isSelect) {
+  const handleSwitchChange = (e, id) => {
+    if (e.target.checked) {
       dispatch(manageCategoryStatus({ id, data: { status: "active" } }));
+    }
+    if (!e.target.checked) {
+      dispatch(manageCategoryStatus({ id, data: { status: "deactive" } }));
     }
   };
   return (
@@ -31,12 +32,12 @@ const SingleCategoryTableItem = ({ count, _id, title, thumbnail, status }) => {
         <MDBSwitch
           id="flexSwitchCheckDefault"
           label={status}
-          checked={status === "checked" ? true : false}
-          onChange={(value) => handleSwitchChange(value, _id)}
+          checked={status === "active" ? true : false}
+          onChange={(e) => handleSwitchChange(e, _id)}
         />
       </td>
       <td>
-        <MDBIcon far icon="edit" />
+        <MDBIcon far icon="edit" onClick={()=>navigate(`/category/edit/${_id}`)}/>
       </td>
     </tr>
   );

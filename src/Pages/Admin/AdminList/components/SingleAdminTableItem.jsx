@@ -1,6 +1,6 @@
 import { MDBSwitch } from "mdb-react-ui-kit";
 import { useDispatch } from "react-redux";
-import { manageAdminStatus } from "../../features/admin/adminSlice";
+import { manageAdminStatus } from "../../../../features/admin/adminSlice";
 
 const SingleAdminTableItem = ({
   count,
@@ -13,12 +13,12 @@ const SingleAdminTableItem = ({
 }) => {
   const dispatch = useDispatch();
   //handleSwitchChange
-  const handleSwitchChange = (isSelect, id) => {
-    if (isSelect) {
-      dispatch(manageAdminStatus({ id, data: { status: "deactive" } }));
-    }
-    if (!isSelect) {
+  const handleSwitchChange = (e, id) => {
+    if (e.target.checked) {
       dispatch(manageAdminStatus({ id, data: { status: "active" } }));
+    }
+    if (!e.target.checked) {
+      dispatch(manageAdminStatus({ id, data: { status: "deactive" } }));
     }
   };
   return (
@@ -33,7 +33,7 @@ const SingleAdminTableItem = ({
         <MDBSwitch
           id="flexSwitchCheckDefault"
           label={status}
-          checked={status === "checked" ? true : false}
+          checked={status === "active" ? true : false}
           onChange={(value) => handleSwitchChange(value, _id)}
         />
       </td>

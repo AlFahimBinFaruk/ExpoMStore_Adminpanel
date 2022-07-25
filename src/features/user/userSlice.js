@@ -90,10 +90,11 @@ export const userSlice = createSlice({
       .addCase(manageUserStatus.fulfilled, (state, action) => {
         state.isUserLoading = false;
         state.isUserSuccess = true;
-        state.userList = state.userList.filter((user) => {
+        state.userList = state.userList.map((user) => {
           if (user._id === action.payload._id) {
             return action.payload;
           }
+          return user
         });
       })
       .addCase(manageUserStatus.rejected, (state, action) => {

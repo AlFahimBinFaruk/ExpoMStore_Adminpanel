@@ -107,11 +107,11 @@ export const getAdminList = createAsyncThunk(
  */
 export const manageAdminStatus = createAsyncThunk(
   "admin/manageAdminStatus",
-  async ({id,data}, thunkAPI) => {
+  async ({ id, data }, thunkAPI) => {
     try {
       //get the admin token ..
       const token = thunkAPI.getState().admin.adminInfo.token;
-      return await adminService.manageAdminStatus(id,data, token);
+      return await adminService.manageAdminStatus(id, data, token);
     } catch (error) {
       const adminMessage =
         (error.response &&
@@ -145,7 +145,7 @@ export const adminSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.isAdminLoading = false;
         state.isAdminSuccess = true;
-        state.adminInfo = action.payload;
+        state.adminMessage = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.isAdminLoading = false;
@@ -173,8 +173,7 @@ export const adminSlice = createSlice({
       .addCase(changePassword.fulfilled, (state, action) => {
         state.isAdminLoading = false;
         state.isAdminSuccess = true;
-        state.adminMessage = "Password Changed.";
-        state.adminInfo = null;
+        state.adminMessage = action.payload;
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.isAdminLoading = false;
@@ -200,10 +199,11 @@ export const adminSlice = createSlice({
       .addCase(manageAdminStatus.fulfilled, (state, action) => {
         state.isAdminLoading = false;
         state.isAdminSuccess = true;
-        state.adminList = state.adminList.filter((admin) => {
+        state.adminList = state.adminList.map((admin) => {
           if (admin._id === action.payload._id) {
             return action.payload;
           }
+          return admin;
         });
       })
       .addCase(manageAdminStatus.rejected, (state, action) => {
@@ -213,6 +213,7 @@ export const adminSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.adminInfo = null;
+        state.isAdminSuccess = true;
       });
   },
 });
